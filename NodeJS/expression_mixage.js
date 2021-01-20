@@ -2,35 +2,57 @@ const fs = require('fs');
 
 
 (async () => {
+	//lecture de fichier
 	await fs.readFile('expression.txt', 'utf8', function(err, data) {
+		//initialisation des données
 		var expressions = data.split('\n');
+		var nouvelle_expression;
+		var variante = Math.floor(Math.random() * 2);
 
-		var nouvelle_expression, expression_random, expression_courante;
-
+		//mélanger les expressions
 		var expressions_shuffle_global = expressions;
+
+		//filter fortement expressions (taille minimale)
+		if (variante >= 1)
+			expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
+
 		for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
 			const j = Math.floor(Math.random() * (i + 1));
 			[expressions_shuffle_global[i], expressions_shuffle_global[j]] = [expressions_shuffle_global[j], expressions_shuffle_global[i]];
 		}
+
+		//traiter les expressions
 		expressions_shuffle_global.forEach(expression_random => {
+			//cas d'arrêt
 			if (nouvelle_expression != undefined) return;
 
+			//filter expressions (sans expression_random)
 			var expressions_shuffle = expressions;
-  			expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+			expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+
+			//mélanger les expressions
 			for (let i = expressions_shuffle.length - 1; i > 0; i--) {
 				const j = Math.floor(Math.random() * (i + 1));
 				[expressions_shuffle[i], expressions_shuffle[j]] = [expressions_shuffle[j], expressions_shuffle[i]];
 			}
 
-			var expression_random = expressions_shuffle.pop();
+			//traitement de l'expression choisi aléatoirement
 			var expression_random_split = expression_random.split(' ');
+
+			//traiter les expressions
 			expressions_shuffle.forEach(expression_courante => {
+				//cas d'arrêt
 				if (nouvelle_expression != undefined) return;
+
 				var expression_courante_split = expression_courante.split(' ');
-				if (expression_courante_split[0] == expression_random_split[expression_random_split.length - 1]) {  //2
+
+				//cas de succès
+				if (expression_courante_split[0] == expression_random_split[expression_random_split.length - (1 + variante)]) {
 					console.log(expression_random);
 					console.log(expression_courante);
-					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(0, expression_courante_split.length)).join(' '); //1 -1
+					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(variante, expression_courante_split.length - variante)).join(' ');
+					
+					//vérification de la possible existance de l'expression
 					if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante) {
 
 						console.log('bad_nouvelle_expression');
@@ -45,8 +67,7 @@ const fs = require('fs');
 			});
 		});
 
+		//affichage de la nouvelle expression
 		console.log(nouvelle_expression);
-
-
 	}); 
 })();
