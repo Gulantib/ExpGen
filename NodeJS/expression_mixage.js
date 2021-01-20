@@ -8,7 +8,7 @@ const fs = require('fs');
 		var expressions = data.split('\n');
 		var nouvelle_expression;
 		var jeton = Math.floor(Math.random() * 4);
-		var variante_A = Math.ceil(jeton / 2);
+		var variante_A = Math.floor(jeton / 2);
 		var variante_B = jeton % 2;
 
 		//mélanger les expressions
@@ -72,8 +72,5 @@ const fs = require('fs');
 				}
 			});
 		});
-
-		//affichage de la nouvelle expression
-		console.log(nouvelle_expression);
 	}); 
 })();
