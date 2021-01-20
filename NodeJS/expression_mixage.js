@@ -7,7 +7,7 @@ const fs = require('fs');
 		//initialisation des données
 		var expressions = data.split('\n');
 		var nouvelle_expression;
-		var jeton = Math.floor(Math.random() * 3);
+		var jeton = Math.floor(Math.random() * 4);
 		var variante_A = Math.ceil(jeton / 2);
 		var variante_B = jeton % 2;
 
