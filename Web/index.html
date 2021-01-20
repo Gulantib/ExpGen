@@ -5,6 +5,9 @@
 		<title>Expression</title>
 	</head>
 	<style type="text/css">
+		* {
+			background-color: black;
+		}
 		#expression {
 			font-size: 5em;
 			text-align: center;
@@ -12,6 +15,12 @@
 			justify-content: center;
 			align-items:flex-end;
 			font-family: "Comic Sans MS", "Comic Sans", cursive;
+			color: white;
+			-webkit-user-select: none; 
+			-webkit-touch-callout: none; 
+			-moz-user-select: none; 
+			-ms-user-select: none; 
+			user-select: none;  
 		}
 		body {
 			display: flex;
@@ -26,80 +35,100 @@
 	</body>
 	<script src="expression_js.js"></script>
 	<script type="text/javascript">
-		//initialisation des données
-		var nouvelle_expression;
-		var variante = Math.floor(Math.random() * 2);
-
-		//mélanger les expressions
-		var expressions_shuffle_global = expressions;
-
-		//filter fortement expressions (taille minimale)
-		if (variante >= 1)
-			expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
-
-		for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
-			const j = Math.floor(Math.random() * (i + 1));
-			[expressions_shuffle_global[i], expressions_shuffle_global[j]] = [expressions_shuffle_global[j], expressions_shuffle_global[i]];
+		function centrer() {
+			document.getElementById("expression").style.height = 
+				((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
 		}
 
-		//traiter les expressions
-		expressions_shuffle_global.forEach(expression_random => {
-			//cas d'arrêt
-			if (nouvelle_expression != undefined) return;
-
-			//filter expressions (sans expression_random)
-			var expressions_shuffle = expressions;
-			expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+		function generer_nouvelle_expression() {
+			//initialisation des données
+			var nouvelle_expression;
+			var variante = Math.floor(Math.random() * 2);
 
 			//mélanger les expressions
-			for (let i = expressions_shuffle.length - 1; i > 0; i--) {
+			var expressions_shuffle_global = expressions;
+
+			//filter fortement expressions (taille minimale)
+			if (variante >= 1)
+				expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
+
+			for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
 				const j = Math.floor(Math.random() * (i + 1));
-				[expressions_shuffle[i], expressions_shuffle[j]] = [expressions_shuffle[j], expressions_shuffle[i]];
+				[expressions_shuffle_global[i], expressions_shuffle_global[j]] = [expressions_shuffle_global[j], expressions_shuffle_global[i]];
 			}
 
-			//traitement de l'expression choisi aléatoirement
-			var expression_random_split = expression_random.split(' ');
-
 			//traiter les expressions
-			expressions_shuffle.forEach(expression_courante => {
+			expressions_shuffle_global.forEach(expression_random => {
 				//cas d'arrêt
 				if (nouvelle_expression != undefined) return;
 
-				var expression_courante_split = expression_courante.split(' ');
+				//filter expressions (sans expression_random)
+				var expressions_shuffle = expressions;
+				expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
 
-				//cas de succès
-				if (expression_courante_split[0] == expression_random_split[expression_random_split.length - (1 + variante)]) {
-					console.log(expression_random);
-					console.log(expression_courante);
-					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(variante, expression_courante_split.length - variante)).join(' ');
-					
-					//vérification de la possible existance de l'expression
-					if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante) {
-
-						console.log('bad_nouvelle_expression');
-						console.log(nouvelle_expression);
-						nouvelle_expression = undefined;
-					}
-					else {
-						console.log('nouvelle_expression_ok');
-						console.log(nouvelle_expression);
-					}
+				//mélanger les expressions
+				for (let i = expressions_shuffle.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[expressions_shuffle[i], expressions_shuffle[j]] = [expressions_shuffle[j], expressions_shuffle[i]];
 				}
+
+				//traitement de l'expression choisi aléatoirement
+				var expression_random_split = expression_random.split(' ');
+
+				//traiter les expressions
+				expressions_shuffle.forEach(expression_courante => {
+					//cas d'arrêt
+					if (nouvelle_expression != undefined) return;
+
+					var expression_courante_split = expression_courante.split(' ');
+
+					//cas de succès
+					if (expression_courante_split[0] == expression_random_split[expression_random_split.length - (1 + variante)]) {
+						console.log(expression_random);
+						console.log(expression_courante);
+						nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(variante, expression_courante_split.length - variante)).join(' ');
+						
+						//vérification de la possible existance de l'expression
+						if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante) {
+
+							console.log('bad_nouvelle_expression');
+							console.log(nouvelle_expression);
+							nouvelle_expression = undefined;
+						}
+						else {
+							console.log('nouvelle_expression_ok');
+							console.log(nouvelle_expression);
+						}
+					}
+				});
 			});
-		});
 
-		//affichage de la nouvelle expression
-		console.log(nouvelle_expression);
+			return nouvelle_expression
+		}
 
-		//mise en page
-		document.getElementById("expression-text").innerText = nouvelle_expression;
-		document.getElementById("expression").style.height = 
-			((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
-		
+		function afficher_nouvelle_expression() {
+			//generer nouvelle expression
+			var nouvelle_expression = generer_nouvelle_expression();
+
+			//affichage de la nouvelle expression
+			console.log(nouvelle_expression);
+
+			//mise en page
+			document.getElementById("expression-text").innerText = nouvelle_expression;
+			centrer();
+		}
+
+		afficher_nouvelle_expression();
+
 		//mise en page automatique
 		window.addEventListener('resize', function(event){
-			document.getElementById("expression").style.height = 
-				((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
+			centrer();
 		});
+
+		//changement au click
+		window.addEventListener('click', function(event){
+			afficher_nouvelle_expression();
+		});
+
 	</script>
 </html>
