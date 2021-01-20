@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Expression</title>
+	</head>
+	<style type="text/css">
+		#expression {
+			font-size: 5em;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items:flex-end;
+			font-family: "Comic Sans MS", "Comic Sans", cursive;
+		}
+		body {
+			display: flex;
+			justify-content: center;
+			align-items:flex-end;
+		}
+	</style>
+	<body>
+		<div id="expression">
+			<div id="expression-text"></div>
+		</div>
+	</body>
+	<script src="expression_js.js"></script>
+	<script type="text/javascript">
+		var nouvelle_expression, expression_random, expression_courante;
+
+		var expressions_shuffle_global = expressions;
+		for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[expressions_shuffle_global[i], expressions_shuffle_global[j]] = [expressions_shuffle_global[j], expressions_shuffle_global[i]];
+		}
+		expressions_shuffle_global.forEach(expression_random => {
+			if (nouvelle_expression != undefined) return;
+
+			var expressions_shuffle = expressions;
+  			expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+			for (let i = expressions_shuffle.length - 1; i > 0; i--) {
+				const j = Math.floor(Math.random() * (i + 1));
+				[expressions_shuffle[i], expressions_shuffle[j]] = [expressions_shuffle[j], expressions_shuffle[i]];
+			}
+
+			var expression_random = expressions_shuffle.pop();
+			var expression_random_split = expression_random.split(' ');
+			expressions_shuffle.forEach(expression_courante => {
+				if (nouvelle_expression != undefined) return;
+				var expression_courante_split = expression_courante.split(' ');
+				if (expression_courante_split[0] == expression_random_split[expression_random_split.length - 1]) {
+					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(0, expression_courante_split.length)).join(' ');
+					if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante)
+						nouvelle_expression = undefined;
+				}
+			});
+		});
+		document.getElementById("expression-text").innerText = nouvelle_expression;
+		document.getElementById("expression").style.height = 
+			((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
+			
+		window.addEventListener('resize', function(event){
+			document.getElementById("expression").style.height = 
+				((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
+		});
+	</script>
+</html>
