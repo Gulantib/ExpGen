@@ -7,13 +7,15 @@ const fs = require('fs');
 		//initialisation des données
 		var expressions = data.split('\n');
 		var nouvelle_expression;
-		var variante = Math.floor(Math.random() * 2);
+		var jeton = Math.floor(Math.random() * 3);
+		var variante_A = 1; //Math.ceil(jeton / 2);
+		var variante_B = 0; //jeton % 2;
 
 		//mélanger les expressions
 		var expressions_shuffle_global = expressions;
 
 		//filter fortement expressions (taille minimale)
-		if (variante >= 1)
+		if (variante_B >= 1)
 			expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
 
 		for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
@@ -29,6 +31,10 @@ const fs = require('fs');
 			//filter expressions (sans expression_random)
 			var expressions_shuffle = expressions;
 			expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+
+			//filter fortement expressions (taille minimale)
+			if (variante_A >= 1)
+				expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
 
 			//mélanger les expressions
 			for (let i = expressions_shuffle.length - 1; i > 0; i--) {
@@ -47,10 +53,10 @@ const fs = require('fs');
 				var expression_courante_split = expression_courante.split(' ');
 
 				//cas de succès
-				if (expression_courante_split[0] == expression_random_split[expression_random_split.length - (1 + variante)]) {
+				if (expression_courante_split[variante_A] == expression_random_split[expression_random_split.length - (1 + variante_B)]) {
 					console.log(expression_random);
 					console.log(expression_courante);
-					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(variante, expression_courante_split.length - variante)).join(' ');
+					nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - (1 + variante_A)).concat(expression_courante_split.splice(variante_B, expression_courante_split.length - variante_B)).join(' ');
 					
 					//vérification de la possible existance de l'expression
 					if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante) {
