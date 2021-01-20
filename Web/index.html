@@ -5,8 +5,13 @@
 		<title>Expression</title>
 	</head>
 	<style type="text/css">
-		* {
-			background-color: black;
+		@media (prefers-color-scheme: dark) {
+			* {
+				background-color: black;
+			}
+			#expression {
+				color: white;
+			}
 		}
 		#expression {
 			font-size: 5em;
@@ -15,7 +20,6 @@
 			justify-content: center;
 			align-items:flex-end;
 			font-family: "Comic Sans MS", "Comic Sans", cursive;
-			color: white;
 			-webkit-user-select: none; 
 			-webkit-touch-callout: none; 
 			-moz-user-select: none; 
@@ -43,13 +47,15 @@
 		function generer_nouvelle_expression() {
 			//initialisation des données
 			var nouvelle_expression;
-			var variante = Math.floor(Math.random() * 2);
+			var jeton = Math.floor(Math.random() * 4);
+			var variante_A = Math.ceil(jeton / 2);
+			var variante_B = jeton % 2;
 
 			//mélanger les expressions
 			var expressions_shuffle_global = expressions;
 
 			//filter fortement expressions (taille minimale)
-			if (variante >= 1)
+			if (variante_B >= 1)
 				expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
 
 			for (let i = expressions_shuffle_global.length - 1; i > 0; i--) {
@@ -65,6 +71,10 @@
 				//filter expressions (sans expression_random)
 				var expressions_shuffle = expressions;
 				expressions_shuffle.splice(expressions_shuffle.indexOf(expression_random), 1);
+
+				//filter fortement expressions (taille minimale)
+				if (variante_A >= 1)
+					expressions_shuffle = expressions_shuffle.filter(expression => expression.split(' ').length > 4);
 
 				//mélanger les expressions
 				for (let i = expressions_shuffle.length - 1; i > 0; i--) {
@@ -83,10 +93,10 @@
 					var expression_courante_split = expression_courante.split(' ');
 
 					//cas de succès
-					if (expression_courante_split[0] == expression_random_split[expression_random_split.length - (1 + variante)]) {
+					if (expression_courante_split[variante_A] == expression_random_split[expression_random_split.length - (1 + variante_B)]) {
 						console.log(expression_random);
 						console.log(expression_courante);
-						nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - 1).concat(expression_courante_split.splice(variante, expression_courante_split.length - variante)).join(' ');
+						nouvelle_expression = expression_random_split.splice(0, expression_random_split.length - (1 + variante_A)).concat(expression_courante_split.splice(variante_B, expression_courante_split.length - variante_B)).join(' ');
 						
 						//vérification de la possible existance de l'expression
 						if (nouvelle_expression == expression_random || nouvelle_expression == expression_courante) {
