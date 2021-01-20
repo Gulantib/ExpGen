@@ -34,7 +34,7 @@ const fs = require('fs');
 
 			//filter fortement expressions (taille minimale)
 			if (variante_A >= 1)
-				expressions_shuffle_global = expressions_shuffle_global.filter(expression => expression.split(' ').length > 4);
+				expressions_shuffle = expressions_shuffle.filter(expression => expression.split(' ').length > 4);
 
 			//mélanger les expressions
 			for (let i = expressions_shuffle.length - 1; i > 0; i--) {
