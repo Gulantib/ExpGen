@@ -1,12 +1,15 @@
+import { Injectable } from '@nestjs/common';
 const fs = require('fs');
 
-
-(async () => {
-	//lecture de fichier
-	await fs.readFile('expression.txt', 'utf8', function(err, data) {
-		//initialisation des données
-		var expressions = data.split('\n');
+@Injectable()
+export class AppService {
+	getExpression() {
 		var nouvelle_expression;
+
+		//lecture de fichier
+		var expressions = fs.readFileSync('src/expression.txt','utf8').split('\n');
+
+		//initialisation des données
 		var jeton = Math.floor(Math.random() * 4);
 		var variante_A = Math.floor(jeton / 2);
 		var variante_B = jeton % 2;
@@ -72,5 +75,7 @@ const fs = require('fs');
 				}
 			});
 		});
-	}); 
-})();
+		nouvelle_expression = nouvelle_expression ? nouvelle_expression.replace(/\r/g, '') : "";
+		return {value: nouvelle_expression};
+	}
+}
