@@ -8,7 +8,7 @@ export class AppController {
 	@Get()
 	//@Render('index')
 	root(@Res() res) {
-		res.sendFile(process.cwd() + '\\src\\index.html');
+		res.sendFile(process.cwd() + '/src/index.html');
 	}
 
 	/*@Get(':id')
