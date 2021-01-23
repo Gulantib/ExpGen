@@ -15,6 +15,11 @@ export class ExpressionsController {
 		return this.expressionsService.findOne(id);
 	}
 
+	@Get('/random')
+	getRandom() {
+		return this.expressionsService.getRandom();
+	}
+
 	@Get('/search/:value')
 	searchValue(@Param('value') value: string) {
 		return this.expressionsService.searchValue(value);

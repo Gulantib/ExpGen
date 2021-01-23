@@ -19,6 +19,11 @@ export class ExpressionsService {
 		return this.expressions.find(element => { return element.id == id });
 	}
 
+	getRandom() {
+		var token = Math.floor(Math.random() * this.expressions.length);
+		return this.expressions[token];
+	}
+
 	searchValue(value: string) {
 		return this.expressions.filter(element => { return (element.content.includes(value) || element.definition_list.reduce((accumulator, currentValue) => { return accumulator || currentValue.includes(value) }, false)) });
 	}
