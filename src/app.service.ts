@@ -155,6 +155,7 @@ export class AppService {
 
 			//choisir les expressions
 			var expression_list_A = expression_list;
+			
 			var expression_list_B;
 			if ((number-1) == 1){
 				expression_list_B = expression_list;
