@@ -1,9 +1,22 @@
 import { Injectable } from '@nestjs/common';
 const fs = require('fs');
+const path = require('path'); 
 
 @Injectable()
 export class AppService {
 	getExpression() {
+		//lecture de fichier
+		var expressions = fs.readFileSync('src/mixed_expression_2.txt','utf8').split('\n');
+
+		//choix de la phrase
+		var tirage = Math.floor(Math.random() * expressions.length);
+		var nouvelle_expression = expressions[tirage];
+
+		nouvelle_expression = nouvelle_expression ? nouvelle_expression.replace(/\r/g, '') : "";
+		return {value: nouvelle_expression};
+	}
+
+	generateExpression() {
 		var nouvelle_expression;
 
 		//lecture de fichier
@@ -78,4 +91,120 @@ export class AppService {
 		nouvelle_expression = nouvelle_expression ? nouvelle_expression.replace(/\r/g, '') : "";
 		return {value: nouvelle_expression};
 	}
+
+	refreshExpression() {
+		if (fs.statSync('src/expression.txt').mtime > fs.statSync('src/mixed_expression_2.txt').mtime) {
+			var new_mixed_expression_list = [];
+
+			//lecture de fichier
+			var expression_list = fs.readFileSync('src/expression.txt','utf8').split('\n');
+
+			//choisir les expressions
+			var expression_list_A = expression_list;
+
+			//traiter les expressions
+			expression_list_A.forEach(expression_A => {
+				//choisir les expressions
+				var expression_list_B = expression_list;
+
+				//traitement de l'expression choisi aléatoirement
+				var expression_A_split = expression_A.split(' ');
+
+				//traiter les expressions
+				expression_list_B.forEach(expression_B => {
+					//cas d'arrêt
+					if (expression_A == expression_B) return;
+
+					//traitement de l'expression choisi aléatoirement
+					var expression_B_split = expression_B.split(' ');
+
+					//liste des variantes
+					for (let type = 0; type < 3; ++type) {
+						//calcul des variantes
+						var variant_A = Math.floor(type / 2);
+						var variant_B = type % 2;
+
+						//filter fortement expressions (taille minimale)
+						if ((variant_A >= 1 && expression_A_split.length <= 4) || (variant_B >= 1 && expression_B_split.length <= 4))
+							continue
+
+						//cas de succès
+						if (expression_A_split[expression_A_split.length - (1 + variant_A)].trim() == expression_B_split[variant_B].trim()) {
+							var new_mixed_expression = expression_A_split.splice(0, expression_A_split.length - (1 + variant_A)).concat(expression_B_split.splice(variant_B, expression_B_split.length - variant_B)).join(' ');
+							if (!expression_list.includes(new_mixed_expression) && !new_mixed_expression_list.includes(new_mixed_expression))
+								new_mixed_expression_list.push(new_mixed_expression);
+						}
+					}
+				});
+			});
+
+			fs.writeFileSync('src/mixed_expression_2	.txt', new_mixed_expression_list.join('\n'));
+
+			return {mixed_expressions_number: new_mixed_expression_list.length};
+		}
+
+		return {information: 'Refresh unnecessary'}
+	}
+
+	refreshExpressionParam(number) {
+		if (number <= 5 && (!fs.existsSync('src/mixed_expression_' + number + '.txt') || fs.statSync('src/expression.txt').mtime > fs.statSync('src/mixed_expression_' + number + '.txt').mtime)) {
+			var new_mixed_expression_list = [];
+
+			//lecture de fichier
+			var expression_list = fs.readFileSync('src/expression.txt','utf8').split('\n');
+
+			//choisir les expressions
+			var expression_list_A = expression_list;
+			var expression_list_B;
+			if ((number-1) == 1){
+				expression_list_B = expression_list;
+			}
+			else {
+				if (!fs.existsSync('src/mixed_expression_' + (number-1) + '.txt')) {
+					this.refreshExpressionParam(number-1)
+				}
+				expression_list_B = fs.readFileSync('src/mixed_expression_' + (number-1) + '.txt','utf8').split('\n');
+			}
+
+			//traiter les expressions
+			expression_list_A.forEach(expression_A => {
+				//traitement de l'expression choisi aléatoirement
+				var expression_A_split = expression_A.split(' ');
+
+				//traiter les expressions
+				expression_list_B.forEach(expression_B => {
+					//cas d'arrêt
+					if (expression_A == expression_B) return;
+
+					//traitement de l'expression choisi aléatoirement
+					var expression_B_split = expression_B.split(' ');
+
+					//liste des variantes
+					for (let type = 0; type < 3; ++type) {
+						//calcul des variantes
+						var variant_A = Math.floor(type / 2);
+						var variant_B = type % 2;
+
+						//filter fortement expressions (taille minimale)
+						if ((variant_A >= 1 && expression_A_split.length <= 4) || (variant_B >= 1 && expression_B_split.length <= 4))
+							continue
+
+						//cas de succès
+						if (expression_A_split[expression_A_split.length - (1 + variant_A)].trim() == expression_B_split[variant_B].trim()) {
+							var new_mixed_expression = expression_A_split.splice(0, expression_A_split.length - (1 + variant_A)).concat(expression_B_split.splice(variant_B, expression_B_split.length - variant_B)).join(' ');
+							if (!expression_list.includes(new_mixed_expression) && !new_mixed_expression_list.includes(new_mixed_expression))
+								new_mixed_expression_list.push(new_mixed_expression);
+						}
+					}
+				});
+			});
+
+			fs.writeFileSync('src/mixed_expression_' + number + '.txt', new_mixed_expression_list.join('\n'));
+
+			return {mixed_expressions_number: new_mixed_expression_list.length};
+		}
+
+		return {information: 'Refresh unnecessary'}
+	}
+
 }
