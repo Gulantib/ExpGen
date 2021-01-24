@@ -45,6 +45,12 @@ And acces to web interface : [localhost:3000/](localhost:3000)
 |GET `/api/mixed_expressions/load`|Load mixed expressions with server file|
 |GET `/api/mixed_expressions/generate`|Generate mixed expressions with expressions|
 
+
+## Online
+
+Try it online on [exp-gen.herokuapp.com](https://exp-gen.herokuapp.com/).
+
+
 ## License
 
-Nest is [MIT licensed](LICENSE).
+Nest is MIT licensed.
