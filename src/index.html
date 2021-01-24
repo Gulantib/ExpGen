@@ -54,28 +54,28 @@
 				if (XHR.status != 200) {
 					alert('Internal Server Error');
 				} else {
-					//affichage de la nouvelle expression
-					document.getElementById("expression-text").innerText = JSON.parse(XHR.responseText).value;
+					//display new expression
+					document.getElementById("expression-text").innerText = JSON.parse(XHR.responseText).content;
 
-					//mise en page
+					//page setup
 					centrer();
 				}
 			});
 
-			//appel à l'API
-			XHR.open("GET", "/api/");
+			//call API
+			XHR.open("GET", "/api/mixed_expressions/random");
 			XHR.send();
 
 		}
 
 		afficher_nouvelle_expression();
 
-		//mise en page automatique
+		//automatic page setup
 		window.addEventListener('resize', function(event){
 			centrer();
 		});
 
-		//changement au click
+		//update click
 		window.addEventListener('click', function(event){
 			afficher_nouvelle_expression();
 		});

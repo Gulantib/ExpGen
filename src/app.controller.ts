@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller('')
+@Controller()
 export class AppController {
 	constructor(private readonly appService: AppService) {}
 
@@ -10,29 +10,4 @@ export class AppController {
 	root(@Res() res) {
 		res.sendFile(process.cwd() + '/src/index.html');
 	}
-
-	/*@Get(':id')
-	rootParam(@Res() res, @Param('id') id: string) {
-		res.sendFile(process.cwd() + '\\src\\index.html');
-	}*/
-
-	@Get('/api')
-	getExpression() {
-		return this.appService.getExpression();
-	}
-
-	@Get('/api/generate')
-	generateExpression() {
-		return this.appService.generateExpression();
-	}
-
-	@Get('/api/refresh')
-	refreshExpression() {
-		return this.appService.refreshExpression();
-	}
-
-	@Get('/api/refresh/:number')
-	refreshExpressionParam(@Res() res, @Param('number') number: string) {
-		return this.appService.refreshExpressionParam(parseInt(number));
-	}	
 }

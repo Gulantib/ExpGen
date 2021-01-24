@@ -5,41 +5,45 @@ const fs = require('fs');
 
 @Injectable()
 export class ExpressionsService {
-	expressions: Expression[] = [];
+	static expressions: Expression[] = [];
 
 	constructor() {
 		this.loadExpressions();
 	}
 
 	findAll() {
-		return this.expressions;
+		return ExpressionsService.expressions;
 	}
 
 	findOne(id: string) {
-		return this.expressions.find(element => { return element.id == id });
+		return ExpressionsService.expressions.find(element => { return element.id == id });
 	}
 
 	getRandom() {
-		var token = Math.floor(Math.random() * this.expressions.length);
-		return this.expressions[token];
+		var token = Math.floor(Math.random() * ExpressionsService.expressions.length);
+		return ExpressionsService.expressions[token];
 	}
 
 	searchValue(value: string) {
-		return this.expressions.filter(element => { return (element.content.includes(value) || element.definition_list.reduce((accumulator, currentValue) => { return accumulator || currentValue.includes(value) }, false)) });
+		return ExpressionsService.expressions.filter(element => { 
+			return (element.content.includes(value) 
+				|| element.definition_list.reduce((accumulator, currentValue) => { return accumulator || currentValue.includes(value) }, false))
+		});
 	}
 
 	loadExpressions() {
-		var dataFile = fs.readFileSync('src/expressions/expressions.txt','utf8');
+		var dataFile = fs.readFileSync('src/expressions/expressions.json','utf8');
 		var expressionsDataFile = JSON.parse(dataFile);
+		ExpressionsService.expressions = [];
 		expressionsDataFile.forEach(element => {
-			this.expressions.push(new Expression(element.id, element.content, element.definition_list));
+			ExpressionsService.expressions.push(new Expression(element.id, element.content, element.definition_list));
 		});
 		return {information: 'Expressions loaded'}
 	}
 
 	addExpression(content: string, definition_list: string[]) {
-		var id = this.expressions.length.toString();
-		this.expressions.push(new Expression(id, content, definition_list));
+		var id = ExpressionsService.expressions.length.toString();
+		ExpressionsService.expressions.push(new Expression(id, content, definition_list));
 		return this.findOne(id);
 	}
 }
