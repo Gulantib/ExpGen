@@ -1,9 +1,11 @@
 # ExpGen
 Generate french mixed expressions 
 
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
 
 ## Installation
 
@@ -12,6 +14,7 @@ Config NestJS :
 $ npm install
 $ npm i -g @nestjs/cli
 ```
+
 
 ## Running the app
 
@@ -22,6 +25,7 @@ $ npm run start
 ```
 
 And acces to web interface : [localhost:3000/](localhost:3000)
+
 
 ## Acces API
 
