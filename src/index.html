@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Expression</title>
+	</head>
+	<style type="text/css">
+		@media (prefers-color-scheme: dark) {
+			* {
+				background-color: black;
+			}
+			#expression {
+				color: white;
+			}
+		}
+		#expression {
+			font-size: 5em;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items:flex-end;
+			font-family: "Comic Sans MS", "Comic Sans", cursive;
+			-webkit-user-select: none; 
+			-webkit-touch-callout: none; 
+			-moz-user-select: none; 
+			-ms-user-select: none; 
+			user-select: none;  
+		}
+		body {
+			display: flex;
+			justify-content: center;
+			align-items:flex-end;
+		}
+	</style>
+	<body>
+		<div id="expression">
+			<div id="expression-text"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		function centrer() {
+			document.getElementById("expression").style.height = 
+				((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
+		}
+
+		function afficher_nouvelle_expression() {
+			let XHR = new XMLHttpRequest();
+
+			XHR.addEventListener("error", function(event) {
+				alert('Internal Server Error');
+			});
+
+			XHR.addEventListener("load", function(event) {
+				if (XHR.status != 200) {
+					alert('Internal Server Error');
+				} else {
+					//display new expression
+					document.getElementById("expression-text").innerText = JSON.parse(XHR.responseText).content;
+
+					//page setup
+					centrer();
+				}
+			});
+
+			//call API
+			XHR.open("GET", "/api/mixed_expressions/random");
+			XHR.send();
+
+		}
+
+		afficher_nouvelle_expression();
+
+		//automatic page setup
+		window.addEventListener('resize', function(event){
+			centrer();
+		});
+
+		//update click
+		window.addEventListener('click', function(event){
+			afficher_nouvelle_expression();
+		});
+
+	</script>
+</html>
