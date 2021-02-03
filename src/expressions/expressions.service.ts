@@ -5,45 +5,52 @@ const fs = require('fs');
 
 @Injectable()
 export class ExpressionsService {
-	static expressions: Expression[] = [];
+	static expressions: Expression[][] = [];
+	static langs: string[] = ['fr','uk'];
 
 	constructor() {
-		this.loadExpressions();
+		ExpressionsService.langs.forEach(lang => {
+			this.loadExpressions(lang);
+		});
 	}
 
-	findAll() {
-		return ExpressionsService.expressions;
+	static isLang(lang: string) {
+		return ExpressionsService.langs.find(element => { return ( element == lang ); });
 	}
 
-	findOne(id: string) {
-		return ExpressionsService.expressions.find(element => { return element.id == id });
+	findAll(lang: string) {
+		return ExpressionsService.expressions[lang];
 	}
 
-	getRandom() {
-		var token = Math.floor(Math.random() * ExpressionsService.expressions.length);
-		return ExpressionsService.expressions[token];
+	findOne(lang: string, id: string) {
+		return ExpressionsService.expressions[lang].find(element => { return element.id == id });
 	}
 
-	searchValue(value: string) {
-		return ExpressionsService.expressions.filter(element => { 
+	getRandom(lang: string) {
+		var token = Math.floor(Math.random() * ExpressionsService.expressions[lang].length);
+		return ExpressionsService.expressions[lang][token];
+	}
+
+	searchValue(lang: string, value: string) {
+		return ExpressionsService.expressions[lang].filter(element => { 
 			return (element.content.includes(value) 
 				|| element.definition_list.reduce((accumulator, currentValue) => { return accumulator || currentValue.includes(value) }, false))
 		});
 	}
 
-	loadExpressions() {
-		var dataFile = fs.readFileSync('src/expressions/expressions.json','utf8');
+	loadExpressions(lang: string) {
+		var dataFile = fs.readFileSync('src/expressions/expressions_' + lang + '.json','utf8');
 		var expressionsDataFile = JSON.parse(dataFile);
-		ExpressionsService.expressions = [];
+		ExpressionsService.expressions[lang] = [];
 		expressionsDataFile.forEach(element => {
-			ExpressionsService.expressions.push(new Expression(element.id, element.content, element.definition_list));
+			ExpressionsService.expressions[lang].push(new Expression(element.id, element.content, element.definition_list));
 		});
-		return {information: 'Expressions loaded'}
+		return { information: 'Expressions loaded' }
 	}
 
-	addExpression(content: string, definition_list: string[]) {
-		var id = ExpressionsService.expressions.length.toString();
-		ExpressionsService.expressions.push(new Expression(id, content, definition_list));
-		return this.findOne(id);
+	addExpression(lang: string, content: string, definition_list: string[]) {
+		var id = ExpressionsService.expressions[lang].length.toString();
+		ExpressionsService.expressions[lang].push(new Expression(id, content, definition_list));
+		return this.findOne(lang, id);
 	}
 }

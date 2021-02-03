@@ -38,6 +38,32 @@
 		</div>
 	</body>
 	<script type="text/javascript">
+		//check language
+		var lang;
+		var authorizedLanguages = ['fr','uk'];
+		let pathLang = window.location.pathname.split('/')[1].toLowerCase();
+		let navigatorLang = navigator.language.split('-')[0].toLowerCase();
+		
+		//language is in url
+		if (pathLang != "")
+			lang = pathLang;
+		//use default navigator language
+		else
+			lang = navigatorLang;
+
+		//if is a unauthorized language, transform similary language
+		if (authorizedLanguages.indexOf(lang) == -1) {
+			switch (lang) {
+				case 'en':
+				case 'us':
+					lang = 'uk';
+					break;
+				default:
+					lang = 'fr';
+			}
+		}
+
+
 		function centrer() {
 			document.getElementById("expression").style.height = 
 				((document.documentElement.clientHeight-document.getElementById("expression-text").clientHeight)/2 + document.getElementById("expression-text").clientHeight) + 'px';
@@ -63,7 +89,7 @@
 			});
 
 			//call API
-			XHR.open("GET", "/api/mixed_expressions/random");
+			XHR.open("GET", "/api/" + lang + "/mixed_expressions/random");
 			XHR.send();
 
 		}

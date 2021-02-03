@@ -1,38 +1,57 @@
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
+import { ExpressionsService } from 'src/expressions/expressions.service';
 import { MixedExpressionsService } from './mixed_expressions.service';
 
-@Controller('api/mixed_expressions')
+@Controller('api')
 export class MixedExpressionsController {
 	constructor(private readonly mixedExpressionsService: MixedExpressionsService) {}
 
-	@Get('/item')
-	findAll() {
-		return this.mixedExpressionsService.findAll();
+	@Get('/:lang/mixed_expressions/item')
+	findAll(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.findAll(lang);
 	}
 
-	@Get('/item/:id')
-	findOne(@Param('id') id: string) {
-		return this.mixedExpressionsService.findOne(id);
+	@Get('/:lang/mixed_expressions/item/:id')
+	findOne(
+		@Param('lang') lang: string,
+		@Param('id') id: string
+	) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.findOne(lang, id);
 	}
 
-	@Get('/random')
-	getRandom() {
-		return this.mixedExpressionsService.getRandom();
+	@Get('/:lang/mixed_expressions/random')
+	getRandom(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.getRandom(lang);
 	}
 
-	@Get('/search/:value')
-	searchValue(@Param('value') value: string) {
-		return this.mixedExpressionsService.searchValue(value);
+	@Get('/:lang/mixed_expressions/search/:value')
+	searchValue(
+		@Param('lang') lang: string,
+		@Param('value') value: string
+	) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.searchValue(lang, value);
 	}
 
-	@Get('/load')
-	loadExpressions() {
-		return this.mixedExpressionsService.loadExpressions();
+	@Get('/:lang/mixed_expressions/load')
+	loadExpressions(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.loadExpressions(lang);
 	}
 
-	@Get('/generate')
-	generateExpressions() {
-		return this.mixedExpressionsService.generateExpressions();
+	@Get('/:lang/mixed_expressions/generate')
+	generateExpressions(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.mixedExpressionsService.generateExpressions(lang);
 	}
 
 }

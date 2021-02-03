@@ -1,40 +1,59 @@
 import { Controller, Get, Param, Post, Body } from '@nestjs/common';
 import { ExpressionsService } from './expressions.service';
 
-@Controller('api/expressions')
+@Controller('api')
 export class ExpressionsController {
 	constructor(private readonly expressionsService: ExpressionsService) {}
 
-	@Get('/item')
-	findAll() {
-		return this.expressionsService.findAll();
+	@Get('/:lang/expressions/item')
+	findAll(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.findAll(lang);
 	}
 
-	@Get('/item/:id')
-	findOne(@Param('id') id: string) {
-		return this.expressionsService.findOne(id);
+	@Get('/:lang/expressions/item/:id')
+	findOne(
+		@Param('lang') lang: string,
+		@Param('id') id: string
+	) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.findOne(lang, id);
 	}
 
-	@Get('/random')
-	getRandom() {
-		return this.expressionsService.getRandom();
+	@Get('/:lang/expressions/random')
+	getRandom(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.getRandom(lang);
 	}
 
-	@Get('/search/:value')
-	searchValue(@Param('value') value: string) {
-		return this.expressionsService.searchValue(value);
+	@Get('/:lang/expressions/search/:value')
+	searchValue(
+		@Param('lang') lang: string,
+		@Param('value') value: string
+	) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.searchValue(lang, value);
 	}
 
-	@Get('/load')
-	loadExpressions() {
-		return this.expressionsService.loadExpressions();
+	@Get('/:lang/expressions/load')
+	loadExpressions(@Param('lang') lang: string) {
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.loadExpressions(lang);
 	}
 
-	@Post('/item')
+	@Post('/:lang/expressions/item')
 	addExpression(
+		@Param('lang') lang: string,
 		@Body('content') content: string,
 		@Body('definition_list') definition_list: string[]
 	) {
-		return this.expressionsService.addExpression(content, definition_list);
+		if (!ExpressionsService.isLang(lang))
+			return {information: 'Language unsupported'}
+		return this.expressionsService.addExpression(lang, content, definition_list);
 	}
 }
