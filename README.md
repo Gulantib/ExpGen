@@ -42,7 +42,7 @@ And acces to web interface : [localhost:3000/](localhost:3000)
 |GET `/api/:lang/mixed_expressions/item`|Get all mixed expressions|
 |GET `/api/:lang/mixed_expressions/item/:id`|Get mixed expression with id|
 |GET `/api/:lang/mixed_expressions/random`|Get random mixed expression|
-|GET `/api/:lang/expressions/search/:value`|Get mixed expressions according to value|
+|GET `/api/:lang/mixed_expressions/search/:value`|Get mixed expressions according to value|
 |GET `/api/:lang/mixed_expressions/load`|Load mixed expressions with server file|
 |GET `/api/:lang/mixed_expressions/generate`|Generate mixed expressions with expressions|
 
@@ -53,8 +53,8 @@ language supported :
 |--------|--------|--------|--------|
 |French|fr|✅|Default language|
 |British English|uk|✅||
-|American English|us|❌||
-|English|en|❌||
+|American English|us|❌|Supported in web interface|
+|English|en|❌|Supported in web interface|
 |German|de|❌||
 
 
