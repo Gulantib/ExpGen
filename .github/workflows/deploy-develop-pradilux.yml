@@ -4,15 +4,15 @@ on:
     branches:
       - develop
 jobs:
-  FTP-Deploy-develop-Action:
-    name: FTP-Deploy-develop-Action
+  ExpGen:
+    name: ExpGen
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.1.e
+    - uses: actions/checkout@v2
       with:
         fetch-depth: 2
-    - name: FTP-Deploy-develop-Action
-      uses: Gulantib/FTP-Deploy-develop-Action@3.1.1
+    - name: ExpGen
+      uses: Gulantib/ExpGen@1
       with:
         ftp-server: ${( secrets.FTP_SERVER )}
         ftp-username: ${( secrets.FTP_USERNAME_DEV )}
