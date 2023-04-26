@@ -12,7 +12,7 @@ jobs:
       with:
         fetch-depth: 2
     - name: ExpGen
-      uses: Gulantib/ExpGen@lastest
+      uses: Gulantib/ExpGen
       with:
         ftp-server: ${( secrets.FTP_SERVER )}
         ftp-username: ${( secrets.FTP_USERNAME_DEV )}
