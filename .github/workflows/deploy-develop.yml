@@ -1,0 +1,19 @@
+name: Publish branch develop to dev.exp-gen.pradilux.com
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  FTP-Deploy-develop-Action:
+    name: FTP-Deploy-develop-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.e
+      with:
+        fetch-depth: 2
+    - name: FTP-Deploy-develop-Action
+      uses: Gulantib/FTP-Deploy-develop-Action@3.1.1
+      with:
+        ftp-server: ${( secrets.FTP_SERVER )}
+        ftp-username: ${( secrets.FTP_USERNAME_DEV )}
+        ftp-password: ${( secrets.FTP_PASSWORD_DEV )}
