@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/vmdn3910/exp-gen.pradilux.com
+    - /bin/cp * $DEPLOYPATH
